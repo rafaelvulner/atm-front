@@ -1,0 +1,192 @@
+<html>
+
+<head>
+	<title>Hello, world!</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body ng-app="atm">
+
+	<div class="container">
+		<div class="jumbotron" style="text-align: center">
+			<h1>ATM</h1>
+		</div>
+		<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Bank</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Account</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Operation</a>
+			</li>
+		</ul>
+		<div class="tab-content" id="tabBank">
+			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" ng-controller="bankController">
+				<div class="col-8 center">
+					<form>
+						<div class="form-group">
+							<label class="col-form-label" for="bankName_id">Bank Name</label>
+							<input type="text" class="form-control" id="bankName_id" ng-model="bankName" placeholder="Type bank name" required>
+						</div>
+						<button class="btn btn-primary" ng-click="saveBank()">Save</button>
+					</form>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab" ng-controller="AccountController">
+				<div class="col-8 center">
+					<form>
+						<div class="form-group">
+							<label class="col-form-label" for="formGroupExampleInput">Select Bank</label>
+							<select class="form-control" id="banlList_id" ng-model="bankList" ng-options="option.name for option in listBank track by option.id"
+							 required>
+							</select>
+
+						</div>
+						<div class="form-group">
+							<label class="col-form-label" for="formGroupExampleInput">Account number:</label>
+							<input type="number" class="form-control" id="accountNumber_id" ng-model="number" required>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label" for="formGroupExampleInput">Owner name</label>
+							<input type="text" class="form-control" id="owner_id" ng-model="owner" required>
+						</div>
+						<div class="form-group">
+							<label class="col-form-label" for="formGroupExampleInput">balance</label>
+							<input type="number" class="form-control" id="balance_id" ng-model="balance" required>
+						</div>
+						<div class="form-group">
+							<label for="password_id" class="col-form-label">Password</label>
+							<input type="password" class="form-control" id="password_id" placeholder="Password" ng-model="password" required>
+						</div>
+
+						<button type="submit" class="btn btn-primary" ng-click="saveAccount()">Save</button>
+					</form>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab" ng-controller="AtmController">
+				<div class="col-8 center">
+					<div>
+						<div>
+							<div id="firstItem">
+								<form>
+									<div class="form-group">
+										<label class="col-form-label" for="banlList_id">Select Bank</label>
+										<select class="form-control" id="banlList_id" ng-model="bankList" ng-options="option.name for option in listBank track by option.id">
+										</select>
+										<div class="form-group">
+											<label for="operation_id">Operation</label>
+											<select class="form-control" id="operation_id" ng-model="operation" ng-change="createInput()">
+												<option value="deposit">Deposit</option>
+												<option value="withdraw">Withdraw</option>
+												<option value="balance">Balance</option>
+											</select required>
+										</div>
+										<div class="form-group" id="deposit">
+											Value deposit
+											<input type="text" class="form-control" id="deposit_id" ng-model="deposit">
+										</div>
+										<div class="form-group" id="withdraw">
+											Value withdraw
+											<input type="text" class="form-control" id="withdraw_id" ng-model="withdraw">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-form-label" for="formGroupExampleInput">Account number:</label>
+										<input type="text" class="form-control" id="formGroupExampleInput" ng-model="number" required>
+									</div>
+									<div class="form-group">
+										<label for="inputPassword3" class="col-form-label">Password</label>
+										<input type="password" class="form-control" id="inputPassword3" placeholder="Password" ng-model="password" required>
+									</div>
+									<button type="submit" class="btn btn-primary" ng-click="authenticate()">Authenticate</button>
+									<button onclick="changeSlide()" class="btn btn-primary">Change</button>
+								</form>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<!-- The Modal -->
+				<div class="modal" id="myModal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+
+							<!-- Modal Header -->
+							<div class="modal-header">
+								<h4 class="modal-title">{{headerModal}}</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- Modal body -->
+							<div class="modal-body">
+								<div id="info">
+									<h3></h3>
+								</div>
+							</div>
+
+							<!-- Modal footer -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+ crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="app/main.js">
+
+</script>
+<script src="app/componentes/bank/bank.service.js"></script>
+<script src="app/componentes/bank/bank.controller.js"></script>
+
+<script src="app/componentes/account/account.service.js"></script>
+<script src="app/componentes/account/account.controller.js"></script>
+
+<script src="app/componentes/atm/atm.service.js"></script>
+<script src="app/componentes/atm/atm.controller.js"></script>
+
+
+
+<script>
+	function changeSlide() {
+		if ($("#secondItem").hasClass("d-none")) {
+			$("#secondItem").removeClass("d-none");
+			$("#firstItem").addClass("d-none");
+		}
+		else {
+			$("#secondItem").addClass("d-none");
+			$("#firstItem").removeClass("d-none");
+		}
+	}
+</script>
+
+</html>
